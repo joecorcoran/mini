@@ -1,0 +1,9 @@
+[package]
+name = "mini"
+version = "0.1.0"
+authors = ["Joe Corcoran <joecorcoran@gmail.com>"]
+
+[dependencies]
+nickel = "0.7"
+nickel_mustache = "*"
+getopts = "0.2"
