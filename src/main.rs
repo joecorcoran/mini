@@ -3,6 +3,7 @@ extern crate nickel_mustache;
 extern crate getopts;
 
 use nickel::{Nickel, HttpRouter};
+use nickel::status::StatusCode;
 use nickel_mustache::Render;
 use std::collections::HashMap;
 use std::path::PathBuf;
@@ -43,8 +44,12 @@ fn main() {
 
     server.get("/:page", middleware! { |request, response|
         let page = request.param("page").unwrap_or("missing");
+        let path = page_path(&root, &page);
+        if !path.is_file() {
+            return response.error(StatusCode::NotFound, "Page not found");
+        }
         let data: HashMap<&str, &str> = HashMap::new();
-        return response.render_with_layout(page_path(&root, &page), layout_path(&root), &data)
+        return response.render_with_layout(path, layout_path(&root), &data)
     });
 
     server.listen("127.0.0.1:6767");
